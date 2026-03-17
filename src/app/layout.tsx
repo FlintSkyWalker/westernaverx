@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { DM_Sans, Playfair_Display } from "next/font/google";
+import { CartProvider } from "@/context/CartContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import CartDrawer from "@/components/CartDrawer";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -37,9 +39,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${dmSans.variable} ${playfair.variable} antialiased`}>
-        <Navbar />
-        {children}
-        <Footer />
+        <CartProvider>
+          <Navbar />
+          <CartDrawer />
+          {children}
+          <Footer />
+        </CartProvider>
       </body>
     </html>
   );

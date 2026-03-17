@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { PhoneIcon, ChevDownIcon, MenuIcon, XIcon } from "./icons";
+import { PhoneIcon, ChevDownIcon, MenuIcon, XIcon, CartIcon } from "./icons";
+import { useCart } from "@/context/CartContext";
 
 const FACILITY_LINKS = [
   { label: "RCFEs & Assisted Living", href: "/rcfe" },
@@ -18,6 +19,7 @@ export default function Navbar() {
   const [facDrop, setFacDrop] = useState(false);
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const { cartCount, cartOpen, setCartOpen } = useCart();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -109,11 +111,32 @@ export default function Navbar() {
             About
           </Link>
           <Link
+            href="/shop"
+            className={`nav-link ${!showWhiteBg ? "!text-white/80" : ""}`}
+          >
+            Shop
+          </Link>
+          <Link
             href="/contact"
             className={`nav-link ${!showWhiteBg ? "!text-white/80" : ""}`}
           >
             Contact
           </Link>
+
+          {/* Cart */}
+          <button
+            onClick={() => setCartOpen(!cartOpen)}
+            className={`relative bg-transparent border-none cursor-pointer flex items-center ${
+              showWhiteBg ? "text-navy" : "text-white"
+            }`}
+          >
+            <CartIcon />
+            {cartCount > 0 && (
+              <span className="absolute -top-1.5 -right-2 bg-teal text-white rounded-full w-[18px] h-[18px] text-[11px] font-bold flex items-center justify-center">
+                {cartCount}
+              </span>
+            )}
+          </button>
 
           <a
             href="tel:8187474000"
@@ -126,14 +149,29 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Menu Button */}
-        <button
-          className={`md:hidden bg-transparent border-none cursor-pointer ${
-            showWhiteBg ? "text-navy" : "text-white"
-          }`}
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          {menuOpen ? <XIcon /> : <MenuIcon />}
-        </button>
+        <div className="flex md:hidden items-center gap-3">
+          <button
+            onClick={() => setCartOpen(!cartOpen)}
+            className={`relative bg-transparent border-none cursor-pointer flex items-center ${
+              showWhiteBg ? "text-navy" : "text-white"
+            }`}
+          >
+            <CartIcon />
+            {cartCount > 0 && (
+              <span className="absolute -top-1.5 -right-2 bg-teal text-white rounded-full w-[18px] h-[18px] text-[11px] font-bold flex items-center justify-center">
+                {cartCount}
+              </span>
+            )}
+          </button>
+          <button
+            className={`bg-transparent border-none cursor-pointer ${
+              showWhiteBg ? "text-navy" : "text-white"
+            }`}
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            {menuOpen ? <XIcon /> : <MenuIcon />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
@@ -154,6 +192,7 @@ export default function Navbar() {
             ))}
           </div>
           <Link href="/about" className="nav-link">About</Link>
+          <Link href="/shop" className="nav-link">Shop</Link>
           <Link href="/contact" className="nav-link">Contact</Link>
           <a
             href="tel:8187474000"
